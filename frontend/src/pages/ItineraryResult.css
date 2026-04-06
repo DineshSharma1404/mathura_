@@ -1,0 +1,60 @@
+.result-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.result-header {
+  margin-bottom: 1rem;
+}
+
+.result-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.result-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  background: #e06b2c;
+  color: #fff;
+}
+
+.result-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem;
+}
+
+.day-cards-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.summary-panel {
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  background: #fff;
+  padding: 1rem;
+  position: sticky;
+  top: 80px;
+  align-self: start;
+}
+
+.summary-panel a {
+  display: inline-block;
+  margin-top: 0.8rem;
+  color: #c45a23;
+}
+
+@media (max-width: 900px) {
+  .result-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-panel {
+    position: static;
+  }
+}

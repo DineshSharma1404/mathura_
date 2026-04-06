@@ -1,0 +1,14 @@
+.search-box {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 15px;
+    width: 300px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.no-result {
+    text-align: center;
+    font-size: 18px;
+    color: #777;
+}
