@@ -1,0 +1,35 @@
+.hotel-details-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.hotel-banner {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.amenity-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.amenity-list span {
+  background: #fff2e9;
+  color: #b45424;
+  border-radius: 999px;
+  padding: 0.4rem 0.7rem;
+}
+
+.hotel-details-shell .book-btn {
+  display: inline-block;
+  text-decoration: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  background: #da6528;
+  color: #fff;
+}

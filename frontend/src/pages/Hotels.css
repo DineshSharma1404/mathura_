@@ -1,0 +1,81 @@
+.hotels-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.hotels-toolbar {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 0.8fr;
+  gap: 0.8rem;
+  margin: 0.8rem 0 1rem;
+}
+
+.hotels-toolbar input,
+.hotels-toolbar select {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.55rem;
+}
+
+.hotel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.9rem;
+}
+
+.hotel-card {
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.hotel-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.hotel-card div {
+  padding: 0.8rem;
+}
+
+.fav-btn {
+  margin-top: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  background: #f4f4f4;
+}
+
+.fav-btn.active {
+  background: #e6f8ea;
+  color: #28743b;
+}
+
+.hotel-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.hotel-actions a {
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  background: #f4f4f4;
+  color: #333;
+}
+
+.hotel-actions .book-btn {
+  background: #da6528;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .hotels-toolbar {
+    grid-template-columns: 1fr;
+  }
+}

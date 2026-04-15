@@ -1,0 +1,31 @@
+.booking-success-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.receipt-card {
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  background: #fff;
+  padding: 1rem;
+}
+
+.receipt-card p {
+  margin: 0.5rem 0;
+}
+
+.success-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.success-actions a {
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  background: #f4f4f4;
+  color: #333;
+}

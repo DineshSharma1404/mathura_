@@ -40,6 +40,11 @@
     transition: 0.3s;
 }
 
+.nav-button {
+    border: none;
+    background: transparent;
+}
+
 .nav-item:hover {
     background: rgba(255, 255, 255, 0.25);
 }
