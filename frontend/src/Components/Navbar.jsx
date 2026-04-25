@@ -36,6 +36,9 @@ function Navbar() {
           <NavLink to="/travel-desk" className="nav-item">
             Travel Desk
           </NavLink>
+          <NavLink to="/subscriptions" className="nav-item">
+            Subscription
+          </NavLink>
           {user ? (
             <button type="button" className="nav-item nav-button" onClick={onLogout}>
               Logout

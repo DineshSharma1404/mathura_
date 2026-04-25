@@ -6,7 +6,7 @@
 
 .travel-desk-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 0.9rem;
 }
 
@@ -30,6 +30,20 @@
   padding: 0.55rem;
 }
 
+.desk-card button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem;
+  background: #cf5d22;
+  color: #fff;
+  font-weight: 700;
+}
+
+.desk-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
 .estimate {
   margin: 0;
   font-weight: 700;
@@ -44,4 +58,42 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.feature-card {
+  grid-column: span 2;
+}
+
+.feature-subtitle {
+  margin-top: -0.2rem;
+  color: #5b5b5b;
+}
+
+.feature-form {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.mini-info {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #5f5f5f;
+}
+
+.error-text {
+  margin-top: 0.8rem;
+  color: #c02828;
+  font-weight: 600;
+}
+
+.text-link {
+  color: #b34f20;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 960px) {
+  .feature-card {
+    grid-column: span 1;
+  }
 }

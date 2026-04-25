@@ -29,3 +29,12 @@
   background: #f4f4f4;
   color: #333;
 }
+
+.success-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  background: #d25f24;
+  color: #fff;
+  font-weight: 700;
+}

@@ -8,14 +8,45 @@ const bookingSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    hotelId: { type: String, required: true },
-    hotelName: { type: String, required: true },
+    bookingType: {
+      type: String,
+      enum: ["hotel", "guide", "rental"],
+      default: "hotel",
+      index: true,
+    },
+    hotelId: {
+      type: String,
+      required() {
+        return this.bookingType === "hotel";
+      },
+      default: "",
+    },
+    hotelName: {
+      type: String,
+      required() {
+        return this.bookingType === "hotel";
+      },
+      default: "",
+    },
+    serviceName: { type: String, default: "" },
     guestName: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, default: "" },
     checkIn: { type: String, required: true },
     checkOut: { type: String, required: true },
-    rooms: { type: Number, required: true, min: 1, max: 10 },
+    rooms: {
+      type: Number,
+      required() {
+        return this.bookingType === "hotel";
+      },
+      min: 1,
+      max: 10,
+      default: 1,
+    },
+    details: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
     totalAmount: { type: Number, required: true, min: 1 },
     paymentStatus: {
       type: String,

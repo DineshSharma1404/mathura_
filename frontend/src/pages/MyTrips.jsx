@@ -4,6 +4,12 @@ import Layout from "../Components/Layout";
 import { api, getCurrentUser } from "../services/api";
 import "./MyTrips.css";
 
+const bookingTypeLabel = {
+  hotel: "Hotel",
+  guide: "Travel Guide",
+  rental: "Vehicle Rental",
+};
+
 function MyTrips() {
   const itinerary = useMemo(() => {
     const value = localStorage.getItem("lastItinerary");
@@ -15,6 +21,7 @@ function MyTrips() {
     Boolean(localStorage.getItem("authToken"))
   );
   const [bookingError, setBookingError] = useState("");
+  const [subscription, setSubscription] = useState(null);
 
   const user = useMemo(() => getCurrentUser(), []);
 
@@ -23,14 +30,18 @@ function MyTrips() {
     return value ? JSON.parse(value) : [];
   }, []);
 
+  const latestBooking = bookings[0];
+
   useEffect(() => {
     let mounted = true;
     if (!localStorage.getItem("authToken")) return () => (mounted = false);
 
-    api
-      .getMyBookings()
-      .then((data) => {
-        if (mounted) setBookings(data.bookings || []);
+    Promise.all([api.getMyBookings(), api.getMySubscriptions()])
+      .then(([bookingsData, subscriptionData]) => {
+        if (!mounted) return;
+        setBookings(bookingsData.bookings || []);
+        const active = (subscriptionData.subscriptions || []).find((item) => item.status === "active");
+        setSubscription(active || null);
       })
       .catch((err) => {
         if (mounted) setBookingError(err.message);
@@ -68,21 +79,24 @@ function MyTrips() {
           </article>
 
           <article className="trip-card">
-            <h3>Latest Hotel Booking</h3>
+            <h3>Latest Booking</h3>
             {loadingBookings ? (
               <p>Loading bookings...</p>
-            ) : bookings.length ? (
+            ) : latestBooking ? (
               <>
-                <p>{bookings[0].hotelName}</p>
-                <p>
-                  {bookings[0].checkIn} to {bookings[0].checkOut}
+                <p className="booking-type-pill">
+                  {bookingTypeLabel[latestBooking.bookingType] || "Booking"}
                 </p>
-                <Link to={`/booking/success?bookingId=${bookings[0]._id}`}>View booking</Link>
+                <p>{latestBooking.serviceName || latestBooking.hotelName}</p>
+                <p>
+                  {latestBooking.checkIn} to {latestBooking.checkOut}
+                </p>
+                <Link to={`/booking/success?bookingId=${latestBooking._id}`}>View booking</Link>
               </>
             ) : (
               <>
                 <p>{bookingError || "No booking made yet."}</p>
-                <Link to="/hotels">Book a hotel</Link>
+                <Link to="/travel-desk">Create booking</Link>
               </>
             )}
           </article>
@@ -97,14 +111,31 @@ function MyTrips() {
             <h3>Booking History</h3>
             {bookings.length ? (
               <ul className="booking-mini-list">
-                {bookings.slice(0, 4).map((item) => (
+                {bookings.slice(0, 5).map((item) => (
                   <li key={item._id}>
-                    {item.hotelName} - {item.paymentStatus}
+                    {bookingTypeLabel[item.bookingType] || "Booking"}: {item.serviceName || item.hotelName} -{" "}
+                    {item.paymentStatus}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>Complete your first paid booking to build history.</p>
+              <p>Complete your first booking to build history.</p>
+            )}
+          </article>
+
+          <article className="trip-card">
+            <h3>Subscription</h3>
+            {subscription ? (
+              <>
+                <p>{subscription.planName}</p>
+                <p>Active till {new Date(subscription.endDate).toLocaleDateString("en-IN")}</p>
+                <Link to="/subscriptions">Manage plan</Link>
+              </>
+            ) : (
+              <>
+                <p>No active plan yet.</p>
+                <Link to="/subscriptions">Get subscription</Link>
+              </>
             )}
           </article>
         </div>

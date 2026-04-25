@@ -12,6 +12,7 @@ import MyTrips from "./pages/MyTrips";
 import TravelDesk from "./pages/TravelDesk";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Subscriptions from "./pages/Subscriptions";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
 function App() {
@@ -59,6 +60,14 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/subscriptions"
+          element={
+            <ProtectedRoute>
+              <Subscriptions />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/temples" element={<Navigate to="/places" replace />} />
         <Route path="/temple/:id" element={<Navigate to="/places" replace />} />
       </Routes>

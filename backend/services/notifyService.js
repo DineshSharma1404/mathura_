@@ -58,4 +58,29 @@ async function sendSmsConfirmation({ phone, bookingId, hotelName, checkIn, check
   return { status: "sent" };
 }
 
-module.exports = { sendEmailConfirmation, sendSmsConfirmation };
+async function sendOtpSms({ phone, otp, purpose }) {
+  if (
+    !process.env.TWILIO_ACCOUNT_SID ||
+    !process.env.TWILIO_AUTH_TOKEN ||
+    !process.env.TWILIO_PHONE_NUMBER
+  ) {
+    return { status: "skipped", reason: "Twilio not configured" };
+  }
+
+  if (!phone || !otp) {
+    return { status: "skipped", reason: "Missing recipient phone or otp" };
+  }
+
+  const twilio = require("twilio");
+  const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+  await client.messages.create({
+    body: `Mathura Explorer OTP for ${purpose}: ${otp}. Valid for 5 minutes.`,
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: phone,
+  });
+
+  return { status: "sent" };
+}
+
+module.exports = { sendEmailConfirmation, sendSmsConfirmation, sendOtpSms };
