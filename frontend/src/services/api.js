@@ -19,7 +19,10 @@ async function request(path, options = {}) {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.message || "Request failed");
+    const detailParts = [data.message, data.reason, data.code ? `code ${data.code}` : "", data.moreInfo]
+      .filter(Boolean)
+      .join(" | ");
+    throw new Error(detailParts || "Request failed");
   }
   return data;
 }
@@ -56,6 +59,11 @@ export const api = {
     }),
   verifyPaytmPayment: (payload) =>
     request("/payments/paytm/verify", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  confirmManualPayment: (payload) =>
+    request("/payments/manual/confirm", {
       method: "POST",
       body: JSON.stringify(payload),
     }),

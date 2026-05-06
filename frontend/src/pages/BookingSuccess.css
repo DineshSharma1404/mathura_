@@ -38,3 +38,46 @@
   color: #fff;
   font-weight: 700;
 }
+
+.scanner-box {
+  margin-top: 1rem;
+  border: 1px solid #ecdccc;
+  border-radius: 12px;
+  background: #fffdfa;
+  padding: 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.scanner-box h3 {
+  margin: 0;
+}
+
+.scanner-image {
+  width: 240px;
+  max-width: 100%;
+  border: 1px solid #e2d7ca;
+  border-radius: 10px;
+}
+
+.scanner-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b6b6b;
+}
+
+.scanner-input {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.6rem;
+}
+
+.scanner-box button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  background: #2e7d32;
+  color: #fff;
+  font-weight: 700;
+  width: fit-content;
+}

@@ -71,16 +71,25 @@ async function sendOtpSms({ phone, otp, purpose }) {
     return { status: "skipped", reason: "Missing recipient phone or otp" };
   }
 
-  const twilio = require("twilio");
-  const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+  try {
+    const twilio = require("twilio");
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
-  await client.messages.create({
-    body: `Mathura Explorer OTP for ${purpose}: ${otp}. Valid for 5 minutes.`,
-    from: process.env.TWILIO_PHONE_NUMBER,
-    to: phone,
-  });
+    const message = await client.messages.create({
+      body: `Mathura Explorer OTP for ${purpose}: ${otp}. Valid for 5 minutes.`,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: phone,
+    });
 
-  return { status: "sent" };
+    return { status: "sent", sid: message.sid };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error.message || "Twilio send failed",
+      code: error.code || "",
+      moreInfo: error.moreInfo || "",
+    };
+  }
 }
 
 module.exports = { sendEmailConfirmation, sendSmsConfirmation, sendOtpSms };

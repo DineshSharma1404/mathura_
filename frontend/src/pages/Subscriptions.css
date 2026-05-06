@@ -43,6 +43,11 @@
   width: 100%;
 }
 
+.sub-card .manual-btn {
+  margin-top: 0.5rem;
+  background: #2f7a38;
+}
+
 .sub-card button:disabled {
   opacity: 0.8;
   cursor: not-allowed;
@@ -54,4 +59,52 @@
   border-radius: 10px;
   padding: 0.8rem;
   margin-bottom: 0.8rem;
+}
+
+.manual-payment-box {
+  margin-top: 1rem;
+  border: 1px solid #d8e6d9;
+  background: #f8fdf8;
+  border-radius: 12px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.manual-payment-box h3 {
+  margin: 0;
+}
+
+.manual-scanner-image {
+  width: 250px;
+  max-width: 100%;
+  border: 1px solid #d6ded7;
+  border-radius: 10px;
+}
+
+.manual-note {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.manual-upi {
+  margin: 0;
+  font-weight: 700;
+}
+
+.manual-input {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.6rem;
+}
+
+.manual-payment-box button {
+  border: none;
+  border-radius: 8px;
+  background: #2f7a38;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.6rem 0.85rem;
+  width: fit-content;
 }

@@ -16,7 +16,11 @@ function BookingSuccess() {
   const [booking, setBooking] = useState(null);
   const [error, setError] = useState("");
   const [paying, setPaying] = useState(false);
+  const [manualRef, setManualRef] = useState("");
+  const [manualProcessing, setManualProcessing] = useState(false);
   const missingId = !bookingId;
+  const scannerImage = "/images/scanner.png";
+  const upiId = "8791271153@axl";
 
   useEffect(() => {
     let mounted = true;
@@ -58,6 +62,28 @@ function BookingSuccess() {
     } catch (err) {
       setError(err.message);
       setPaying(false);
+    }
+  };
+
+  const confirmManualPayment = async () => {
+    if (!booking?._id) return;
+    if (!manualRef.trim()) {
+      setError("Please enter payment transaction reference.");
+      return;
+    }
+    setError("");
+    setManualProcessing(true);
+    try {
+      const response = await api.confirmManualPayment({
+        bookingId: booking._id,
+        transactionRef: manualRef.trim(),
+      });
+      setBooking(response.booking);
+      setManualRef("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setManualProcessing(false);
     }
   };
 
@@ -127,6 +153,31 @@ function BookingSuccess() {
           <Link to="/travel-desk">Create another booking</Link>
           <Link to="/my-trips">Open My Trips</Link>
         </div>
+        {booking.paymentStatus !== "paid" ? (
+          <div className="scanner-box">
+            <h3>Scan & Pay (Hardcoded)</h3>
+            <p>Scan this QR and pay to UPI ID: {upiId}</p>
+            <img
+              src={scannerImage}
+              alt="Payment scanner"
+              className="scanner-image"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
+            />
+            <p className="scanner-note">Scanner image loaded from <code>/images/scanner.png</code></p>
+            <input
+              type="text"
+              value={manualRef}
+              onChange={(event) => setManualRef(event.target.value)}
+              placeholder="Enter UPI transaction ref"
+              className="scanner-input"
+            />
+            <button type="button" onClick={confirmManualPayment} disabled={manualProcessing}>
+              {manualProcessing ? "Confirming..." : "I Have Paid - Confirm"}
+            </button>
+          </div>
+        ) : null}
       </section>
     </Layout>
   );

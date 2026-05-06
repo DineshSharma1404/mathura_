@@ -351,4 +351,47 @@ router.post("/paytm/verify", requireAuth, async (req, res) => {
   }
 });
 
+router.post("/manual/confirm", requireAuth, async (req, res) => {
+  try {
+    const { bookingId, subscriptionId, transactionRef } = req.body;
+
+    if (!bookingId && !subscriptionId) {
+      return res.status(400).json({ message: "bookingId or subscriptionId is required" });
+    }
+
+    if (!transactionRef || String(transactionRef).trim().length < 4) {
+      return res.status(400).json({ message: "Valid transactionRef is required" });
+    }
+
+    if (bookingId) {
+      const booking = await Booking.findOne({ _id: bookingId, userId: req.user.userId });
+      if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+      const notifications = await markBookingPaid(booking, {
+        orderId: `MANUAL_${Date.now()}`,
+        paymentId: String(transactionRef).trim(),
+        signature: "manual",
+      });
+
+      return res.json({
+        success: true,
+        booking,
+        mode: "manual",
+        notifications: { email: notifications.emailResult, sms: notifications.smsResult },
+      });
+    }
+
+    const subscription = await Subscription.findOne({ _id: subscriptionId, userId: req.user.userId });
+    if (!subscription) return res.status(404).json({ message: "Subscription not found" });
+
+    await activateSubscription(subscription, { paymentId: String(transactionRef).trim() });
+    subscription.paymentGateway = "manual";
+    await subscription.save();
+
+    return res.json({ success: true, subscription, mode: "manual" });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to confirm manual payment", error: error.message });
+  }
+});
+
 module.exports = router;

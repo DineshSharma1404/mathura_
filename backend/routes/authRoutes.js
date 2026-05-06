@@ -29,10 +29,12 @@ function isValidEmail(value) {
 }
 
 function normalizePhone(value) {
-  return String(value || "")
+  const raw = String(value || "")
     .trim()
     .replace(/[\s()-]/g, "")
     .replace(/^00/, "+");
+  if (/^[0-9]{10}$/.test(raw)) return `+91${raw}`;
+  return raw;
 }
 
 function isValidPhone(value) {
@@ -132,7 +134,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne(
       cleanIdentifier.includes("@")
         ? { email: cleanIdentifier }
-        : { phone: cleanIdentifier }
+        : { phone: { $in: [cleanIdentifier, cleanIdentifier.replace(/^\+91/, "")] } }
     );
 
     if (!user) return res.status(401).json({ message: "Invalid credentials" });
@@ -235,6 +237,14 @@ router.post("/otp/send", async (req, res) => {
     });
 
     const smsResult = await sendOtpSms({ phone, otp, purpose });
+    if (smsResult.status !== "sent") {
+      return res.status(500).json({
+        message: "OTP SMS delivery failed",
+        reason: smsResult.reason || "Unknown SMS provider error",
+        code: smsResult.code || "",
+        moreInfo: smsResult.moreInfo || "",
+      });
+    }
 
     const response = {
       success: true,

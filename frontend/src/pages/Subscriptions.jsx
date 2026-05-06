@@ -9,6 +9,11 @@ function Subscriptions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [processingPlan, setProcessingPlan] = useState("");
+  const [manualTarget, setManualTarget] = useState(null);
+  const [manualRef, setManualRef] = useState("");
+  const [manualProcessing, setManualProcessing] = useState(false);
+  const scannerImage = "/images/scanner.png";
+  const upiId = "8791271153@axl";
 
   useEffect(() => {
     let mounted = true;
@@ -72,6 +77,46 @@ function Subscriptions() {
     }
   };
 
+  const startManualSubscriptionPayment = async (planCode) => {
+    setError("");
+    setProcessingPlan(planCode);
+    try {
+      const createRes = await api.createSubscription({
+        planCode,
+        paymentGateway: "manual",
+      });
+      setManualTarget(createRes.subscription);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setProcessingPlan("");
+    }
+  };
+
+  const confirmManualSubscriptionPayment = async () => {
+    if (!manualTarget?._id) return;
+    if (!manualRef.trim()) {
+      setError("Please enter payment transaction reference.");
+      return;
+    }
+    setError("");
+    setManualProcessing(true);
+    try {
+      await api.confirmManualPayment({
+        subscriptionId: manualTarget._id,
+        transactionRef: manualRef.trim(),
+      });
+      const refresh = await api.getMySubscriptions();
+      setMySubscriptions(refresh.subscriptions || []);
+      setManualRef("");
+      setManualTarget(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setManualProcessing(false);
+    }
+  };
+
   return (
     <Layout>
       <section className="sub-shell">
@@ -110,10 +155,51 @@ function Subscriptions() {
                 >
                   {processingPlan === plan.code ? "Processing..." : "Subscribe via Paytm"}
                 </button>
+                <button
+                  type="button"
+                  disabled={processingPlan === plan.code}
+                  onClick={() => startManualSubscriptionPayment(plan.code)}
+                  className="manual-btn"
+                >
+                  {processingPlan === plan.code ? "Processing..." : "Scan & Pay (QR)"}
+                </button>
               </article>
             ))}
           </div>
         )}
+        {manualTarget ? (
+          <div className="manual-payment-box">
+            <h3>Complete Manual Payment</h3>
+            <p>
+              Plan: <strong>{manualTarget.planName}</strong> | Amount: INR {manualTarget.amount}
+            </p>
+            <p>Pay using scanner and enter transaction reference.</p>
+            <img
+              src={scannerImage}
+              alt="Payment scanner"
+              className="manual-scanner-image"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
+            />
+            <p className="manual-note">Scanner image loaded from <code>/images/scanner.png</code></p>
+            <p className="manual-upi">UPI ID: {upiId}</p>
+            <input
+              type="text"
+              value={manualRef}
+              onChange={(event) => setManualRef(event.target.value)}
+              placeholder="Enter UPI transaction ref"
+              className="manual-input"
+            />
+            <button
+              type="button"
+              onClick={confirmManualSubscriptionPayment}
+              disabled={manualProcessing}
+            >
+              {manualProcessing ? "Confirming..." : "I Have Paid - Activate Plan"}
+            </button>
+          </div>
+        ) : null}
       </section>
     </Layout>
   );
